@@ -1,55 +1,45 @@
 import { Autocomplete, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import Loader from "../Loader/Loader";
 
-export default function AutoComplete({
-  value,
-  apiName,
-  onChangeName,
-}) {
+export default function AutoComplete({ value, apiName, setValue, field }) {
   const [suggestion, setSuggestion] = useState([]);
+  const [search, setSearch] = useState("");
 
-  const fetchTyping = async (typing) => {
-    try {
-      console.log(typing);
-      const response = await apiName({ search: typing });
-      if (response?.status === "Success") {
-        const myObject = JSON.parse(response?.result);
-        setSuggestion(myObject);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
+  const fetchData = async () => {
+    const response = await apiName();
+    if (response?.status === "Success") {
+      const myObject = JSON.parse(response?.result);
+      setSuggestion(myObject);
     }
   };
-  
 
-  const handleInputChange = async (event, newValue) => {
-    await fetchTyping(newValue);
-    onChangeName(newValue);
-  };
-
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
-     {suggestion.length > 0 ? (
       <Autocomplete
         id={`size-small-filled-assetType`}
         size="small"
-        value={value || ""}
-        onChange={handleInputChange}
+        value={value || null}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+        }}
+        onInputChange={(event, newInputValue) => {
+          setSearch(newInputValue);
+        }}
         options={suggestion.map((data) => ({
-          Name: data?.Name,
-          Id: data?.Id,
+          Name: data?.sName,
+          Id: data?.iId,
         }))}
         filterOptions={(options, { inputValue }) => {
           return options.filter((option) =>
-            option.Name.toLowerCase().includes(inputValue.toLowerCase())
+            option && option.Name && option.Name.toLowerCase().includes(inputValue.toLowerCase())
           );
         }}
         autoHighlight
-        getOptionLabel={(option) =>
-          option && option.Name ? option.Name : ""
-        }
+        getOptionLabel={(option) => (option && option.Name ? option.Name : "")}
         renderOption={(props, option) => (
           <li {...props}>
             <div
@@ -75,7 +65,7 @@ export default function AutoComplete({
         renderInput={(params) => (
           <TextField
             required
-            label={`Project`}
+            label={field}
             {...params}
             inputProps={{
               ...params.inputProps,
@@ -85,15 +75,15 @@ export default function AutoComplete({
                 borderColor: "#ddd",
                 borderRadius: "10px",
                 fontSize: "15px",
+
                 height: "20px",
                 paddingLeft: "6px",
               },
             }}
           />
         )}
-        style={{ width: `auto` }}
+        style={{ width: `auto`, zIndex: 1000 }}
       />
-     ):null}
     </>
   );
 }

@@ -101,10 +101,10 @@ function EnhancedTableHead(props) {
         </TableCell>
         {rows.map((header, index) => {
           if (
-            header !== "Id" &&
-            header !== "CityId" &&
-            header !== "CountryId" &&
-            header !== "DepartmentId"
+            header !== "iId" &&
+            header !== "iCityId" &&
+            header !== "iCountryId" &&
+            header !== "iDepartmentId"
           ) {
             // Exclude "iId", "iAssetType", and "sAltName" from the header
             return (
@@ -178,10 +178,8 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Summary() {
-  const iUser = Number(localStorage.getItem("userId"));
+  const token = Number(localStorage.getItem("accessToken"));
   const location = useLocation();
-  const details = location.state;
-  const direction = useNavigate();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState(0);
   const [selected, setSelected] = React.useState([]);
@@ -192,6 +190,7 @@ export default function Summary() {
   const [display, setDisplay] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [edit, setEdit] = React.useState(0)
 
   const buttonStyle = {
     textTransform: "none", // Set text transform to none for normal case
@@ -207,6 +206,7 @@ export default function Summary() {
   };
 
   const handleCloseModal = () => {
+    setEdit(0)
     setIsModalOpen(false);
   };
 
@@ -226,14 +226,13 @@ export default function Summary() {
       const myObject = JSON.parse(response?.result);
       setData(myObject);
     }
-
     handleClose();
   };
 
   React.useEffect(() => {
     fetchData(); // Initial data fetch
     setPage(0);
-  }, [details]);
+  }, [token]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -302,6 +301,20 @@ export default function Summary() {
   );
 
 
+  const handleEdit =()=>{
+    setEdit(selected.join())  
+    handleOpenModal()
+  }
+
+  const handleNew =()=>{
+    setEdit(0)
+    handleOpenModal()
+  }
+
+ const handleSubmit = ()=>{
+   fetchData()
+ }
+
 
   return (
     <>
@@ -330,7 +343,7 @@ export default function Summary() {
               padding={1}
               justifyContent="flex-end"
             >
-              <Button onClick={handleOpenModal}
+              <Button onClick={handleNew}
                 variant="contained"
                 startIcon={<AddIcon />}
                 style={buttonStyle}
@@ -338,7 +351,9 @@ export default function Summary() {
                 New
               </Button>
 
-              <Button
+              <Button 
+              onClick={handleEdit}
+                 disabled={selected.length !== 1}
                 variant="contained"
                 style={buttonStyle}
                 startIcon={<EditIcon />}
@@ -355,7 +370,7 @@ export default function Summary() {
               }}
             >
               <EnhancedTableToolbar
-                name={details?.sScreen}
+             
                 numSelected={selected.length} // Provide the numSelected prop
               />
 
@@ -389,7 +404,7 @@ export default function Summary() {
 
                     <TableBody>
                       {visibleRows.map((row, index) => {
-                        const isItemSelected = isSelected(row.iTransId);
+                        const isItemSelected = isSelected(row.iId);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         const handleRowDoubleClick = async (event, iId) => {
@@ -404,15 +419,15 @@ export default function Summary() {
                             hover
                             className={`table-row `}
                             onClick={(event) =>
-                              handleClick(event, row.iTransId)
+                              handleClick(event, row.iId)
                             }
                             onDoubleClick={(event) =>
-                              handleRowDoubleClick(event, row.iTransId)
+                              handleRowDoubleClick(event, row.iId)
                             }
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
-                            key={row.iTransId}
+                            key={row.iId}
                             selected={isItemSelected}
                             sx={{ cursor: "pointer" }}
                           >
@@ -427,10 +442,10 @@ export default function Summary() {
                             </TableCell>
                             {Object.keys(data[0]).map((column, index) => {
                               if (
-                                column !== "Id" &&
-                                column !== "CityId" &&
-                                column !== "CountryId" &&
-                                column !== "DepartmentId"
+                                column !== "iId" &&
+                                column !== "iCityId" &&
+                                column !== "iCountryId" &&
+                                column !== "iDepartmentId"
                               ) {
                                 return (
                                   <>
@@ -526,7 +541,7 @@ export default function Summary() {
           </>
         </Box>
         <Loader open={open} handleClose={handleClose} />
-        <Modal isOpen={isModalOpen} handleCloseModal={handleCloseModal} />
+        <Modal isOpen={isModalOpen} handleCloseModal={handleCloseModal} edit={edit} action={handleSubmit} />
       </Box>
     </>
   );

@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute() {
-  return (
-    <div>ProtectedRoute</div>
-  )
+function ProtectedRoute(props) {
+  if (localStorage.getItem("accessToken")) {
+    return props.children;
+  } else {
+    return <Navigate to={"/"} />;
+  }
 }
+
+export default ProtectedRoute;

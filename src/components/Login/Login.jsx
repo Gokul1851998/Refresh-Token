@@ -52,7 +52,6 @@ export default function Login() {
     } else {
       setPassword(false);
     }
-    toString;
     if (sPassword && sLoginName) {
       handleLoaderOpen();
       const response = await getLogin({
@@ -166,14 +165,12 @@ export default function Login() {
                   setCompany(newValue);
                 }}
                 options={suggestionCompany.map((data) => ({
-                  Company: data.Company,
-                  Id: data?.Id,
+                  Company: data.sDatabase,
+                  Id: data?.iId,
                 }))}
                 filterOptions={(options, { inputValue }) => {
                   return options.filter((option) =>
-                    option.Company.toLowerCase().includes(
-                      inputValue.toLowerCase()
-                    )
+                    option && option.Company && option.Company.toLowerCase().includes(inputValue.toLowerCase())
                   );
                 }}
                 autoHighlight

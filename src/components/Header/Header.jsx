@@ -38,9 +38,8 @@ function Header() {
 
   const onClickLog = () => {
     handleClose();
-    localStorage.removeItem("userId");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("iEmployee");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessToken");
     navigate("/");
   };
   const truncatedName = userName ? userName.slice(0, 2) : "";
