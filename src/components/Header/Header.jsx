@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import Logout from "@mui/icons-material/Logout";
+import MenuIcon from '@mui/icons-material/Menu';
 
 function Header() {
   const navigate = useNavigate();
@@ -60,17 +61,7 @@ function Header() {
               src="http://103.120.178.195:82/Sang_solutions/assets/images/sang_logo.png"
               sx={{ mr: 2, width: 60, height: 60 }}
             />
-            <Typography
-              variant="h5"
-              pt={2}
-              gutterBottom
-              sx={{
-                fontWeight: "normal",
-                fontFamily: "YourCustomFont, sans-serif",
-              }}
-            >
-              Sang Solutions
-            </Typography>
+       
 
             <Box
               sx={{
@@ -79,7 +70,9 @@ function Header() {
                 alignItems: "center",
                 justifyContent: "start",
               }}
-            ></Box>
+            >
+               
+            </Box>
 
             <Hidden mdUp>
               {/* Render this box for small screens */}

@@ -27,6 +27,7 @@ import Swal from "sweetalert2";
 import Header from "../Header/Header";
 import { getEmployeeSummary } from "../../api/apicall";
 import Modal from "./Modal";
+import TextFields from "../TextField/TextField";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -191,6 +192,7 @@ export default function Summary() {
   const [open, setOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [edit, setEdit] = React.useState(0)
+  const [direction, setDirection] = React.useState(false)
 
   const buttonStyle = {
     textTransform: "none", // Set text transform to none for normal case
@@ -315,6 +317,10 @@ export default function Summary() {
    fetchData()
  }
 
+  const handlePage = ()=>{
+    setDirection(true)
+  }
+
 
   return (
     <>
@@ -336,7 +342,10 @@ export default function Summary() {
             minHeight: "590px",
           }}
         >
-          <>
+        {direction? (<>
+        <TextFields />
+        </>):(
+            <>
             <Stack
               direction="row"
               spacing={1}
@@ -359,6 +368,15 @@ export default function Summary() {
                 startIcon={<EditIcon />}
               >
                 Edit
+              </Button>
+              <Button 
+              onClick={handlePage}
+               
+                variant="contained"
+                style={buttonStyle}
+                startIcon={<EditIcon />}
+              >
+                Text
               </Button>
             </Stack>
 
@@ -455,7 +473,7 @@ export default function Summary() {
                                           padding: "4px",
                                           border: "1px solid #ddd",
                                           whiteSpace: "nowrap",
-                                          width: "calc(100% / 4)",
+                                          width: "calc(100% / 10)",
                                         }}
                                         key={row[column]}
                                         component="th"
@@ -539,6 +557,7 @@ export default function Summary() {
               />
             </Paper>
           </>
+        )}
         </Box>
         <Loader open={open} handleClose={handleClose} />
         <Modal isOpen={isModalOpen} handleCloseModal={handleCloseModal} edit={edit} action={handleSubmit} />

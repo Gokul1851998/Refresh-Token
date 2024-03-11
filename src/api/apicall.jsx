@@ -137,3 +137,7 @@ export const postEmployee = async (payload) => {
 export const getEmployeeDetails = async (payload) => {
   return makeAuthorizedRequest("get","/Employee/GetEmployeebyId",payload);
 };
+
+export const getFields = async (payload) => {
+  return makeAuthorizedRequest("get","MasterField/GetMastersFields",payload);
+};

@@ -70,7 +70,7 @@ export default function Modal({ isOpen, handleCloseModal, edit,action }) {
         setCountry({ Name: myObject[0].Country, Id: myObject[0].iCountryId });
         setDepartment({
           Name: myObject[0].Department,
-          id: myObject[0].iDepartmentId,
+          Id: myObject[0].iDepartmentId,
         });
         setPincode(`${myObject[0].iPinCode}`);
         setJoin(formatDate(myObject[0].dDateofJoining));
@@ -114,7 +114,6 @@ export default function Modal({ isOpen, handleCloseModal, edit,action }) {
       previousSalary: Number(prev),
       currentSalary: Number(current),
     };
- 
     Swal.fire({
       title: "Are you sure?",
       text: "You want to Save this!",
@@ -126,6 +125,7 @@ export default function Modal({ isOpen, handleCloseModal, edit,action }) {
       if (result.value) {
         handleOpen();
         const response = await postEmployee(data);
+        console.log(response);
         handleClose();
         if (response?.status === "Success") {
           Swal.fire({
