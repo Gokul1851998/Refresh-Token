@@ -57,7 +57,7 @@ export default function Login() {
       const response = await getLogin({
         username: sLoginName,
         password: sPassword,
-        database: `${company?.Id}`,
+        database: `${company?.Company}`,
       });
       if (response?.tokens) {
         localStorage.setItem("accessToken", response?.tokens?.accessToken);
